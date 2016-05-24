@@ -5,3 +5,5 @@ val get_blockquote_by_id : string -> Dom_html.quoteElement Js.t
 val get_button_by_id : string -> Dom_html.buttonElement Js.t
 val get_link_by_id : string -> Dom_html.linkElement Js.t
 val get_body_by_id : string -> Dom_html.bodyElement Js.t
+
+val console_log : string -> unit

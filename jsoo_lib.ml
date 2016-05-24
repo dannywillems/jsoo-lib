@@ -1,5 +1,6 @@
 let doc = Dom_html.document
 
+(* -------------------------------------------------------------------------- *)
 let get_input_by_id str =
   Js.coerce (Dom_html.getElementById str) Dom_html.CoerceTo.input
   (fun _ -> assert false)
@@ -27,3 +28,9 @@ let get_link_by_id str =
 let get_body_by_id str =
   Js.coerce (Dom_html.getElementById str) Dom_html.CoerceTo.body
   (fun _ -> assert false)
+(* -------------------------------------------------------------------------- *)
+
+(* -------------------------------------------------------------------------- *)
+let console_log str =
+  Firebug.console##log (Js.string str)
+(* -------------------------------------------------------------------------- *)
