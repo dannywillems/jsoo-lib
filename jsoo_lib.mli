@@ -7,3 +7,4 @@ val get_link_by_id : string -> Dom_html.linkElement Js.t
 val get_body_by_id : string -> Dom_html.bodyElement Js.t
 
 val console_log : string -> unit
+val alert : string -> unit

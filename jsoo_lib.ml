@@ -33,4 +33,7 @@ let get_body_by_id str =
 (* -------------------------------------------------------------------------- *)
 let console_log str =
   Firebug.console##log (Js.string str)
+
+let alert str =
+  Dom_html.window##alert (Js.string str)
 (* -------------------------------------------------------------------------- *)
