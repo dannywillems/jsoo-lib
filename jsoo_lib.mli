@@ -9,6 +9,8 @@ val get_body_by_id : string -> Dom_html.bodyElement Js.t
 val console_log : string -> unit
 val alert : string -> unit
 
+val onload : (Dom_html.event Js.t -> bool Js.t) -> unit
+
 (* See http://www.w3schools.com/tags/tag_link.asp *)
 module Head :
   sig

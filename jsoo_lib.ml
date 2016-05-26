@@ -38,6 +38,12 @@ let alert str =
   Dom_html.window##alert (Js.string str)
 (* -------------------------------------------------------------------------- *)
 
+(* -------------------------------------------------------------------------- *)
+let onload (f : (Dom_html.event Js.t -> bool Js.t)) =
+  Dom_html.window##.onload := Dom.handler f
+(* -------------------------------------------------------------------------- *)
+
+(* -------------------------------------------------------------------------- *)
 module Head =
   struct
     (* FIXME: external lib for listing media_type *)
@@ -128,7 +134,9 @@ module Head =
       script##._type := Js.string "text/javascript";
       Dom.appendChild doc##.head script
   end
+(* -------------------------------------------------------------------------- *)
 
+(* -------------------------------------------------------------------------- *)
 module Body =
   struct
     let add_js_script l =
@@ -137,3 +145,4 @@ module Body =
       script##._type := Js.string "text/javascript";
       Dom.appendChild doc##.body script
   end
+(* -------------------------------------------------------------------------- *)
