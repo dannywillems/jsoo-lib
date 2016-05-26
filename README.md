@@ -1,5 +1,7 @@
 # jsoo_lib
 
+![screenshot.png](res/screenshot.png)
+
 Additional function to js_of_ocaml bindings to Javascript standard library.
 
 ## How to install?
