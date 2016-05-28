@@ -28,6 +28,10 @@ let get_link_by_id str =
 let get_body_by_id str =
   Js.coerce (Dom_html.getElementById str) Dom_html.CoerceTo.body
   (fun _ -> assert false)
+
+let get_img_by_id str =
+  Js.coerce (Dom_html.getElementById str) Dom_html.CoerceTo.img
+  (fun _ -> assert false)
 (* -------------------------------------------------------------------------- *)
 
 (* -------------------------------------------------------------------------- *)
@@ -144,5 +148,11 @@ module Body =
       script##.src := Js.string l;
       script##._type := Js.string "text/javascript";
       Dom.appendChild doc##.body script
+
+    let rec append_child_mult a l =
+      match l with
+      | [] -> ()
+      | head::l -> Dom.appendChild a head
+
   end
 (* -------------------------------------------------------------------------- *)

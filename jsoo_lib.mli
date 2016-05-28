@@ -5,6 +5,7 @@ val get_blockquote_by_id : string -> Dom_html.quoteElement Js.t
 val get_button_by_id : string -> Dom_html.buttonElement Js.t
 val get_link_by_id : string -> Dom_html.linkElement Js.t
 val get_body_by_id : string -> Dom_html.bodyElement Js.t
+val get_img_by_id : string -> Dom_html.imageElement Js.t
 
 val console_log : string -> unit
 val alert : string -> unit
@@ -65,4 +66,6 @@ module Head :
 module Body :
   sig
     val add_js_script : string -> unit
+
+    val append_child_mult : #Dom.node Js.t -> #Dom.node Js.t list -> unit
   end
