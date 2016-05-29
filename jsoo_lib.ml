@@ -32,6 +32,10 @@ let get_body_by_id str =
 let get_img_by_id str =
   Js.coerce (Dom_html.getElementById str) Dom_html.CoerceTo.img
   (fun _ -> assert false)
+
+let get_textarea_by_id str =
+  Js.coerce (Dom_html.getElementById str) Dom_html.CoerceTo.textarea
+  (fun _ -> assert false)
 (* -------------------------------------------------------------------------- *)
 
 (* -------------------------------------------------------------------------- *)
