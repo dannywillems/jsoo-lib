@@ -1,0 +1,40 @@
+stages:
+  - lint
+  - build
+
+lint:
+  stage: lint
+  image: registry.gitlab.com/dannywillems/docker-ocamlformat:0.15.0
+  before_script:
+    - eval $(opam env)
+  script:
+    - ocamlformat --check test/*.ml*
+    - ocamlformat --check src/*.ml*
+
+.build-test: &build_definition
+  stage: build
+  before_script:
+    # Always update system package manager + setup OPAM env
+    - sudo apt-get update && sudo apt-get upgrade -y
+    - eval $(opam env)
+    - opam repository set-url default https://opam.ocaml.org
+    - opam update
+    # Install NVM for the JS test
+    - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+    - export NVM_DIR="$HOME/.nvm"
+    - . "$NVM_DIR/nvm.sh"
+    - nvm install 12.18.3
+    - nvm use 12.18.3
+  script:
+    - opam install --deps-only -y .
+    # Install the package
+    - opam install .
+    # Run tests
+    - dune build test
+    # js_of_ocaml compatibility
+    - node _build/default/test/test_bigint.bc.js
+
+build-ocaml-4.07:
+  <<: *build_definition
+  image: ocaml/opam2:4.07
+
