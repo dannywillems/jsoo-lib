@@ -1,5 +1,6 @@
-(executable
+(library
  (name jsoo_lib)
+ (public_name jsoo-lib)
  (libraries js_of_ocaml
             js_of_ocaml-compiler
             js_of_ocaml-ppx

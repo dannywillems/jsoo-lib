@@ -86,4 +86,15 @@ module BigInt : sig
 
   (** Create a BigInt value from an integer *)
   val of_int : int -> t
+
+  (** Create a BigInt value from a string *)
+  val of_string : string -> t
+
+  (** [is_bigint js_obj] returns [true] if [js_obj] is of type [BigInt], else
+      [false]
+  *)
+  val is_bigint : Js.Unsafe.any -> bool
+
+  (** Returns a Js.Unsafe.any value representing the same value given *)
+  val to_any_js : t -> Js.Unsafe.any
 end

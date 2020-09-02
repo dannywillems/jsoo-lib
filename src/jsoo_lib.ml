@@ -164,10 +164,19 @@ end
 (* -------------------------------------------------------------------------- *)
 
 module BigInt = struct
-  type t = Js.Unsafe.any Js.t
+  type t = Js.Unsafe.any
 
   let of_int x =
     Js.Unsafe.fun_call
       (Js.Unsafe.js_expr "BigInt")
       [| Js.Unsafe.inject (Js.string (string_of_int x)) |]
+
+  let of_string x =
+    Js.Unsafe.fun_call
+      (Js.Unsafe.js_expr "BigInt")
+      [| Js.Unsafe.inject (Js.string x) |]
+
+  let is_bigint x = Js.to_string (Js.typeof x) = "bigint"
+
+  let to_any_js x = x
 end
