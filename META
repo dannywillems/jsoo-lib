@@ -1,3 +1,0 @@
-version = "dev"
-description = "Additional functions to js_of_ocaml bindings to javascript stdlib"
-archive(byte) = "jsoo_lib.cma"

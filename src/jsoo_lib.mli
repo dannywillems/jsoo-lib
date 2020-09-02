@@ -1,3 +1,5 @@
+open Js_of_ocaml
+
 val get_input_by_id : string -> Dom_html.inputElement Js.t
 val get_p_by_id : string -> Dom_html.paramElement Js.t
 val get_div_by_id : string -> Dom_html.divElement Js.t

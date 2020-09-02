@@ -1,0 +1,12 @@
+(executable
+ (name jsoo_lib)
+ (libraries js_of_ocaml
+            js_of_ocaml-compiler
+            js_of_ocaml-ppx
+ )
+ (modes byte)
+ (js_of_ocaml)
+ (preprocess (pps js_of_ocaml-ppx))
+ (flags (:standard ))
+)
+

@@ -1,3 +1,5 @@
+open Js_of_ocaml
+
 let doc = Dom_html.document
 
 (* -------------------------------------------------------------------------- *)
@@ -125,7 +127,7 @@ module Head =
       ?(media_type=No_media_type) ?(cross_origin=Default_cross_origin)
       ?(language_code="") ?(media_query="") ~rel href =
       let l = Dom_html.createLink doc in
-      (*l##.crossorigin := Js.string (cross_origin_to_str cross_origin);*)
+      l##.crossorigin := Js.string (cross_origin_to_str cross_origin);
       l##.href := Js.string href;
       if language_code <> "" then l##.hreflang := Js.string (language_code);
       if media_query <> "" then l##.media := Js.string (media_query);
@@ -156,7 +158,7 @@ module Body =
     let rec append_child_mult a l =
       match l with
       | [] -> ()
-      | head::l -> Dom.appendChild a head
+      | head::tail -> Dom.appendChild a head; append_child_mult a tail
 
   end
 (* -------------------------------------------------------------------------- *)
