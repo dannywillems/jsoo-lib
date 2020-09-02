@@ -1,8 +1,16 @@
 # jsoo_lib
 
-![screenshot.png](res/screenshot.png)
+Binding to different JavaScript libraries/routines using js_of_ocaml
 
-Additional function to js_of_ocaml bindings to Javascript standard library.
+```ocaml
+let onload _ =
+  let btn = Jsoo_lib.get_button_by_id "hello_world" in
+  Jsoo_lib.console_log (Js.to_string btn##.innerHTML);
+  Jsoo_lib.alert "Hello, World in alert with jsoo_lib"
+
+let () =
+  Jsoo_lib.onload onload
+```
 
 ## How to install?
 
