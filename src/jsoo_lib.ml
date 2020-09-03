@@ -190,6 +190,8 @@ module BigInt = struct
 
   let to_any_js x = x
 
+  let of_js x = x
+
   let to_uint64 x =
     Unsigned.UInt64.of_string
       (Js.to_string (Js.Unsafe.meth_call x "toString" [||]))
@@ -204,6 +206,8 @@ end
 
 module Number = struct
   type t = Js.Unsafe.any
+
+  let of_js x = x
 
   let of_int x =
     Js.Unsafe.fun_call

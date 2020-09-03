@@ -104,6 +104,8 @@ module BigInt : sig
   (** Returns a Js.Unsafe.any value representing the same value given *)
   val to_any_js : t -> Js.Unsafe.any
 
+  val of_js : Js.Unsafe.any -> t
+
   (** Convert to [Unsigned.UInt64.t]. Unsafe *)
   val to_uint64 : t -> Unsigned.UInt64.t
 
@@ -139,6 +141,8 @@ module Number : sig
 
   (** Create a [Number] value from a [UInt32] value *)
   val of_uint32 : Unsigned.UInt32.t -> t
+
+  val of_js : Js.Unsafe.any -> t
 
   (** Returns a Js.Unsafe.any value representing the same value given *)
   val to_any_js : t -> Js.Unsafe.any
