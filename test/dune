@@ -1,6 +1,21 @@
 ;; We build first the bytecode to be used by the jsoo compiler
 (executable
  (name test_bigint)
+ (modules test_bigint)
+ (libraries js_of_ocaml
+            js_of_ocaml-compiler
+            js_of_ocaml-ppx
+            jsoo-lib
+ )
+ (modes js)
+ (js_of_ocaml (flags --source-map --pretty))
+ (preprocess (pps js_of_ocaml-ppx))
+)
+
+;; We build first the bytecode to be used by the jsoo compiler
+(executable
+ (name test_number)
+ (modules test_number)
  (libraries js_of_ocaml
             js_of_ocaml-compiler
             js_of_ocaml-ppx

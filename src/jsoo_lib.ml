@@ -180,3 +180,21 @@ module BigInt = struct
 
   let to_any_js x = x
 end
+
+module Number = struct
+  type t = Js.Unsafe.any
+
+  let of_int x =
+    Js.Unsafe.fun_call
+      (Js.Unsafe.js_expr "Number")
+      [| Js.Unsafe.inject (Js.string (string_of_int x)) |]
+
+  let of_string x =
+    Js.Unsafe.fun_call
+      (Js.Unsafe.js_expr "Number")
+      [| Js.Unsafe.inject (Js.string x) |]
+
+  let is_number x = Js.to_string (Js.typeof x) = "number"
+
+  let to_any_js x = x
+end
