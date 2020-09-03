@@ -18,3 +18,8 @@ You need to pin the repository:
 ```
 opam pin add jsoo_lib https://github.com/dannywillems/jsoo-lib.git
 ```
+
+## Missing stubs
+
+Don't forget to add the stubs related to ocaml-integers. See [tests](test/dune)
+for compilation instructions.

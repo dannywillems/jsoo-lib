@@ -15,6 +15,12 @@ depends: [
   "js_of_ocaml" {= "3.7.0"}
   "js_of_ocaml-compiler" {= "3.7.0"}
   "js_of_ocaml-ppx" {= "3.7.0"}
+  "zarith_stubs_js"
+  "integers" {= "0.4.0"}
+  "integers_stubs_js" {= "1.0"}
 ]
 synopsis: "Binding to different JavaScript libraries/routines using js_of_ocaml"
 description: "Binding to different JavaScript libraries/routines using js_of_ocaml"
+pin-depends: [
+  ["integers_stubs_js.1.0" "git+https://github.com/o1-labs/integers_stubs_js.git#1.0"]
+]

@@ -171,6 +171,16 @@ module BigInt = struct
       (Js.Unsafe.js_expr "BigInt")
       [| Js.Unsafe.inject (Js.string (string_of_int x)) |]
 
+  let of_uint32 x =
+    Js.Unsafe.fun_call
+      (Js.Unsafe.js_expr "BigInt")
+      [| Js.Unsafe.inject (Js.string (Unsigned.UInt32.to_string x)) |]
+
+  let of_uint64 x =
+    Js.Unsafe.fun_call
+      (Js.Unsafe.js_expr "BigInt")
+      [| Js.Unsafe.inject (Js.string (Unsigned.UInt64.to_string x)) |]
+
   let of_string x =
     Js.Unsafe.fun_call
       (Js.Unsafe.js_expr "BigInt")
@@ -193,6 +203,16 @@ module Number = struct
     Js.Unsafe.fun_call
       (Js.Unsafe.js_expr "Number")
       [| Js.Unsafe.inject (Js.string x) |]
+
+  let of_uint32 x =
+    Js.Unsafe.fun_call
+      (Js.Unsafe.js_expr "Number")
+      [| Js.Unsafe.inject (Js.string (Unsigned.UInt32.to_string x)) |]
+
+  let of_uint64 x =
+    Js.Unsafe.fun_call
+      (Js.Unsafe.js_expr "Number")
+      [| Js.Unsafe.inject (Js.string (Unsigned.UInt64.to_string x)) |]
 
   let is_number x = Js.to_string (Js.typeof x) = "number"
 
