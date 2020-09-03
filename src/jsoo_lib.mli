@@ -98,3 +98,24 @@ module BigInt : sig
   (** Returns a Js.Unsafe.any value representing the same value given *)
   val to_any_js : t -> Js.Unsafe.any
 end
+
+module Number : sig
+  (** A Number object *)
+  type t
+
+  (** Create a Number value from an integer. The value is not verified to be in
+  the interval allowed for a Number object *)
+  val of_int : int -> t
+
+  (** Create a Number value from a string. The value is not verified to be in
+  the interval allowed for a Number object *)
+  val of_string : string -> t
+
+  (** [is_number js_obj] returns [true] if [js_obj] is of type [Number], else
+      [false]
+   *)
+  val is_number : Js.Unsafe.any -> bool
+
+  (** Returns a Js.Unsafe.any value representing the same value given *)
+  val to_any_js : t -> Js.Unsafe.any
+end
