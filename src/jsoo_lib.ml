@@ -189,6 +189,17 @@ module BigInt = struct
   let is_bigint x = Js.to_string (Js.typeof x) = "bigint"
 
   let to_any_js x = x
+
+  let to_uint64 x =
+    Unsigned.UInt64.of_string
+      (Js.to_string (Js.Unsafe.meth_call x "toString" [||]))
+
+  let to_uint32 x =
+    Unsigned.UInt32.of_string
+      (Js.to_string (Js.Unsafe.meth_call x "toString" [||]))
+
+  let to_int x =
+    int_of_string (Js.to_string (Js.Unsafe.meth_call x "toString" [||]))
 end
 
 module Number = struct
@@ -215,6 +226,17 @@ module Number = struct
       [| Js.Unsafe.inject (Js.string (Unsigned.UInt64.to_string x)) |]
 
   let is_number x = Js.to_string (Js.typeof x) = "number"
+
+  let to_uint64 x =
+    Unsigned.UInt64.of_string
+      (Js.to_string (Js.Unsafe.meth_call x "toString" [||]))
+
+  let to_uint32 x =
+    Unsigned.UInt32.of_string
+      (Js.to_string (Js.Unsafe.meth_call x "toString" [||]))
+
+  let to_int x =
+    int_of_string (Js.to_string (Js.Unsafe.meth_call x "toString" [||]))
 
   let to_any_js x = x
 end
