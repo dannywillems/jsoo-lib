@@ -4,6 +4,7 @@
  (libraries js_of_ocaml
             js_of_ocaml-compiler
             js_of_ocaml-ppx
+            integers
  )
  (modes byte)
  (js_of_ocaml)

@@ -21,7 +21,18 @@
             js_of_ocaml-ppx
             jsoo-lib
  )
- (modes js)
- (js_of_ocaml (flags --source-map --pretty))
+ (modes byte)
  (preprocess (pps js_of_ocaml-ppx))
 )
+
+(rule
+ (targets test_bigint.bc.js)
+ (action
+  (run %{bin:js_of_ocaml}
+    %{lib:integers_stubs_js:runtime.js}
+    ;; Options for debugging purposes
+    %{dep:test_bigint.bc} --pretty --no-inline -o test_bigint.bc.js
+  )
+ )
+)
+

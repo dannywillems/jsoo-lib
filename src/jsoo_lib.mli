@@ -90,6 +90,12 @@ module BigInt : sig
   (** Create a BigInt value from a string *)
   val of_string : string -> t
 
+  (** Create a BigInt value from a UInt64 value *)
+  val of_uint64 : Unsigned.UInt64.t -> t
+
+  (** Create a BigInt value from a UInt32 value *)
+  val of_uint32 : Unsigned.UInt32.t -> t
+
   (** [is_bigint js_obj] returns [true] if [js_obj] is of type [BigInt], else
       [false]
   *)
