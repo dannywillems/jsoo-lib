@@ -113,7 +113,7 @@ module Number : sig
   the interval allowed for a Number object *)
   val of_int : int -> t
 
-  (** Create a Number value from a string. The value is not verified to be in
+  (** Create a [Number] value from a string. The value is not verified to be in
   the interval allowed for a Number object *)
   val of_string : string -> t
 
@@ -121,6 +121,15 @@ module Number : sig
       [false]
    *)
   val is_number : Js.Unsafe.any -> bool
+
+  (** Create a [Number] value from a [UInt64] value.
+      The value is not verified to be in the interval allowed for a Number
+      object.
+   *)
+  val of_uint64 : Unsigned.UInt64.t -> t
+
+  (** Create a [Number] value from a [UInt32] value *)
+  val of_uint32 : Unsigned.UInt32.t -> t
 
   (** Returns a Js.Unsafe.any value representing the same value given *)
   val to_any_js : t -> Js.Unsafe.any
