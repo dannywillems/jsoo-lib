@@ -1,5 +1,15 @@
 open Js_of_ocaml
 
+module type JS_OBJECT = sig
+  type t
+
+  val of_js : Js.Unsafe.any -> t
+
+  val to_any_js : t -> Js.Unsafe.any
+
+  val to_string : t -> string
+end
+
 val get_input_by_id : string -> Dom_html.inputElement Js.t
 
 val get_p_by_id : string -> Dom_html.paramElement Js.t
@@ -81,11 +91,14 @@ end
 
 (** Binding to the BigInt class *)
 module BigInt : sig
-  (** A BigInt object *)
-  type t
+  include JS_OBJECT
 
   (** Create a BigInt value from an integer *)
   val of_int : int -> t
+
+  val zero : t
+
+  val one : t
 
   (** Create a BigInt value from a string *)
   val of_string : string -> t
@@ -101,11 +114,6 @@ module BigInt : sig
   *)
   val is_bigint : Js.Unsafe.any -> bool
 
-  (** Returns a Js.Unsafe.any value representing the same value given *)
-  val to_any_js : t -> Js.Unsafe.any
-
-  val of_js : Js.Unsafe.any -> t
-
   (** Convert to [Unsigned.UInt64.t]. Unsafe *)
   val to_uint64 : t -> Unsigned.UInt64.t
 
@@ -117,12 +125,15 @@ module BigInt : sig
 end
 
 module Number : sig
-  (** A Number object *)
-  type t
+  include JS_OBJECT
 
   (** Create a Number value from an integer. The value is not verified to be in
   the interval allowed for a Number object *)
   val of_int : int -> t
+
+  val zero : t
+
+  val one : t
 
   (** Create a [Number] value from a string. The value is not verified to be in
   the interval allowed for a Number object *)
@@ -142,11 +153,6 @@ module Number : sig
   (** Create a [Number] value from a [UInt32] value *)
   val of_uint32 : Unsigned.UInt32.t -> t
 
-  val of_js : Js.Unsafe.any -> t
-
-  (** Returns a Js.Unsafe.any value representing the same value given *)
-  val to_any_js : t -> Js.Unsafe.any
-
   (** Convert to [Unsigned.UInt64.t]. Unsafe *)
   val to_uint64 : t -> Unsigned.UInt64.t
 
@@ -155,4 +161,81 @@ module Number : sig
 
   (** Convert to [Unsigned.UInt32.t]. Unsafe *)
   val to_uint32 : t -> Unsigned.UInt32.t
+end
+
+module ArrayBuffer : sig
+  include JS_OBJECT
+
+  val make : int -> char -> t
+
+  val is_array_buffer : Js.Unsafe.any -> bool
+
+  val length : t -> Number.t
+end
+
+module type TYPED_ARRAY = sig
+  include JS_OBJECT
+
+  (** OCaml type to represent the elements of the typed array. *)
+  type elt
+
+  (** Name of the typed array. Example: [Uint8Array], [Uint16Array] *)
+  val name : string
+
+  val create : ?offset:Number.t -> ?length:Number.t -> ArrayBuffer.t -> t
+
+  (** [bytes_per_element a] returns the number of bytes an element of the typed array takes. Equivalent to
+      [a.bytes_per_element] in JavaScript *)
+  val bytes_per_element : Number.t
+
+  (** [buffer a] returns the underlying buffer of the array. Equivalent to
+      [a.buffer] in JavaScript *)
+  val buffer : t -> ArrayBuffer.t
+
+  (** Equivalent to [a.byteOffset] in JavaScript *)
+  val byte_offset : t -> Number.t
+
+  (** [byte_length a] returns the number of bytes of the typed array. Equivalent to [a.byteLength] in JavaScript *)
+  val byte_length : t -> Number.t
+
+  (** [get_exn a i] returns the element at position [i] in the array [a]. If [i]
+      is greater than the length of the array, raises an exception in JavaScript.
+      Equivalent to a[i] in JavaScript.
+  *)
+  val get_exn : t -> int -> elt
+
+  (** [get_opt a i] returns the element at position [i] in the array [a] as an
+      option. If [i] is greater than the length of the array, returns [None].
+      Equivalent to a[i] in JavaScript.
+  *)
+  val get_opt : t -> int -> elt option
+
+  (** [set a i x] is equivalent to a[i] = x in JavaScript *)
+  val set : t -> int -> elt -> t
+end
+
+(** Binding to Uint8Array.
+    Compatible with >= ES6 only
+ *)
+module Uint8TypedArray : sig
+  include TYPED_ARRAY with type elt = int
+
+  (** Convert to bytes *)
+  val to_bytes : t -> bytes
+end
+
+(** Binding to Uint16Array.
+    Compatible with >= ES6 only
+ *)
+module Uint16TypedArray : TYPED_ARRAY with type elt = int
+
+(** Represent a ES module. Use [ESModule.of_js m] where [m] is [Js.Unsafe.js_expr {|require ("moule_name") |}] *)
+module ESModule : sig
+  include JS_OBJECT
+
+  (** FIXME: how to provide a function for require? *)
+
+  (* val require : string -> t *)
+
+  val call : t -> string -> Js.Unsafe.any array -> Js.Unsafe.any
 end

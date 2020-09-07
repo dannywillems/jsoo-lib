@@ -1,10 +1,26 @@
 (library
  (name jsoo_lib)
  (public_name jsoo-lib)
+ (modules jsoo_lib)
  (libraries js_of_ocaml
             js_of_ocaml-compiler
             js_of_ocaml-ppx
             integers
+ )
+ (modes byte)
+ (js_of_ocaml)
+ (preprocess (pps js_of_ocaml-ppx))
+ (flags (:standard ))
+)
+
+(library
+ (name jsoo_lib_rust_wasm)
+ (modules jsoo_lib_rust_wasm)
+ (public_name jsoo-lib-rust-wasm)
+ (libraries js_of_ocaml
+            jsoo-lib
+            js_of_ocaml-compiler
+            js_of_ocaml-ppx
  )
  (modes byte)
  (js_of_ocaml)

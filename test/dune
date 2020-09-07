@@ -24,6 +24,30 @@
  (preprocess (pps js_of_ocaml-ppx))
 )
 
+(executable
+ (name test_array_buffer)
+ (modules test_array_buffer)
+ (libraries js_of_ocaml
+            js_of_ocaml-compiler
+            js_of_ocaml-ppx
+            jsoo-lib
+ )
+ (modes byte)
+ (preprocess (pps js_of_ocaml-ppx))
+)
+
+(executable
+ (name test_es_module)
+ (modules test_es_module)
+ (libraries js_of_ocaml
+            js_of_ocaml-compiler
+            js_of_ocaml-ppx
+            jsoo-lib
+ )
+ (modes byte)
+ (preprocess (pps js_of_ocaml-ppx))
+)
+
 (rule
  (targets test_bigint.bc.js)
  (action
@@ -42,6 +66,28 @@
     %{lib:integers_stubs_js:runtime.js}
     ;; Options for debugging purposes
     %{dep:test_number.bc} --pretty --no-inline -o test_number.bc.js
+  )
+ )
+)
+
+(rule
+ (targets test_array_buffer.bc.js)
+ (action
+  (run %{bin:js_of_ocaml}
+    %{lib:integers_stubs_js:runtime.js}
+    ;; Options for debugging purposes
+    %{dep:test_array_buffer.bc} --pretty --no-inline -o test_array_buffer.bc.js
+  )
+ )
+)
+
+(rule
+ (targets test_es_module.bc.js)
+ (action
+  (run %{bin:js_of_ocaml}
+    %{lib:integers_stubs_js:runtime.js}
+    ;; Options for debugging purposes
+    %{dep:test_es_module.bc} --pretty --no-inline -o test_es_module.bc.js
   )
  )
 )

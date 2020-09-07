@@ -1,0 +1,21 @@
+opam-version: "2.0"
+version: "0.0.3"
+maintainer: "Danny Willems <be.danny.willems@gmail.com>"
+authors: ["Danny Willems <be.danny.willems@gmail.com>"]
+homepage: "https://github.com/dannywillems/jsoo-lib"
+bug-reports: "https://github.com/dannywillems/jsoo-lib/issues"
+dev-repo: "git+https://github.com/dannywillems/json-lib.git"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml" {>= "4.04.2"}
+  "dune" {>= "2.0.0"}
+  "jsoo-lib"
+  "js_of_ocaml" {= "3.7.0"}
+  "js_of_ocaml-compiler" {= "3.7.0"}
+  "js_of_ocaml-ppx" {= "3.7.0"}
+]
+synopsis: "Binding to different JavaScript libraries/routines using js_of_ocaml"
+description: "Binding to different JavaScript libraries/routines using js_of_ocaml"
