@@ -1,5 +1,25 @@
 open Js_of_ocaml
 
+module type JS_OBJECT = sig
+  type t
+
+  val of_js : Js.Unsafe.any -> t
+
+  val to_any_js : t -> Js.Unsafe.any
+
+  val to_string : t -> string
+end
+
+module Js_object_base : JS_OBJECT = struct
+  type t = Js.Unsafe.any
+
+  let of_js x = x
+
+  let to_any_js x = x
+
+  let to_string x = Js.to_string (Js.Unsafe.meth_call x "toString" [||])
+end
+
 let doc = Dom_html.document
 
 (* -------------------------------------------------------------------------- *)
@@ -164,12 +184,16 @@ end
 (* -------------------------------------------------------------------------- *)
 
 module BigInt = struct
-  type t = Js.Unsafe.any
+  include Js_object_base
 
   let of_int x =
     Js.Unsafe.fun_call
       (Js.Unsafe.js_expr "BigInt")
       [| Js.Unsafe.inject (Js.string (string_of_int x)) |]
+
+  let zero = of_int 0
+
+  let one = of_int 1
 
   let of_uint32 x =
     Js.Unsafe.fun_call
@@ -188,10 +212,6 @@ module BigInt = struct
 
   let is_bigint x = Js.to_string (Js.typeof x) = "bigint"
 
-  let to_any_js x = x
-
-  let of_js x = x
-
   let to_uint64 x =
     Unsigned.UInt64.of_string
       (Js.to_string (Js.Unsafe.meth_call x "toString" [||]))
@@ -205,14 +225,16 @@ module BigInt = struct
 end
 
 module Number = struct
-  type t = Js.Unsafe.any
-
-  let of_js x = x
+  include Js_object_base
 
   let of_int x =
     Js.Unsafe.fun_call
       (Js.Unsafe.js_expr "Number")
       [| Js.Unsafe.inject (Js.string (string_of_int x)) |]
+
+  let zero = of_int 0
+
+  let one = of_int 1
 
   let of_string x =
     Js.Unsafe.fun_call
@@ -241,6 +263,159 @@ module Number = struct
 
   let to_int x =
     int_of_string (Js.to_string (Js.Unsafe.meth_call x "toString" [||]))
+end
 
-  let to_any_js x = x
+(* Is already available in Js_of_ocaml.Typed_array. Higher interface with non-JS types *)
+module ArrayBuffer = struct
+  include Js_object_base
+
+  let make size _c =
+    (Js.Unsafe.new_obj (Js.Unsafe.variable "ArrayBuffer"))
+      [| Number.to_any_js (Number.of_int size) |]
+
+  let is_array_buffer x =
+    Js.to_string (Js.typeof x) = "object"
+    && Js.to_string (Js.Unsafe.get (Js.Unsafe.get x "constructor") "name")
+       = "ArrayBuffer"
+
+  let length x = Number.of_js (Js.Unsafe.get x "byteLength")
+end
+
+module type TYPED_ARRAY = sig
+  include JS_OBJECT
+
+  val name : string
+
+  val create : ?offset:Number.t -> ?length:Number.t -> ArrayBuffer.t -> t
+
+  val bytes_per_element : Number.t
+
+  val buffer : t -> ArrayBuffer.t
+
+  val byte_offset : t -> Number.t
+
+  val byte_length : t -> Number.t
+
+  type elt
+
+  val get_exn : t -> int -> elt
+
+  val get_opt : t -> int -> elt option
+
+  val set : t -> int -> elt -> t
+end
+
+(* https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Uint8Array *)
+(* The name must be different than Uint8Array if name are kept, otherwise when
+   compiled to JavaScript, Uin8Array will be resolved to this module.
+ *)
+module Uint8TypedArray = struct
+  type elt = int
+
+  type t = Js_of_ocaml.Typed_array.uint8Array Js.t
+
+  let name = "Uint8Array"
+
+  let of_js x =
+    assert (
+      Js.to_string (Js.Unsafe.get (Js.Unsafe.get x "constructor") "name") = name
+    ) ;
+    Js.Unsafe.coerce x
+
+  let to_any_js x = Js.Unsafe.inject x
+
+  let to_string x = Js.to_string (Js.Unsafe.meth_call x "toString" [||])
+
+  let bytes_per_element =
+    Number.of_js (Js.Unsafe.get (Js.Unsafe.variable name) "BYTES_PER_ELEMENT")
+
+  let buffer x = ArrayBuffer.of_js (Js.Unsafe.get x "buffer")
+
+  let byte_length x = Number.of_js (Js.Unsafe.get x "byteLength")
+
+  let byte_offset x = Number.of_js (Js.Unsafe.get x "byteOffset")
+
+  let create ?(offset = Number.zero) ?length array_buffer =
+    (* TODO: add checks on parameters *)
+    let params =
+      if Option.is_none length then
+        [| ArrayBuffer.to_any_js array_buffer; Number.to_any_js offset |]
+      else
+        [| ArrayBuffer.to_any_js array_buffer;
+           Number.to_any_js offset;
+           Number.to_any_js (Option.get length)
+        |]
+    in
+    (Js.Unsafe.new_obj (Js.Unsafe.variable name)) params
+
+  let get_opt x (i : int) : elt option =
+    Js.Optdef.to_option (Js_of_ocaml.Typed_array.get x i)
+
+  let get_exn x i = Js_of_ocaml.Typed_array.unsafe_get x i
+
+  let set x i elt =
+    Js_of_ocaml.Typed_array.set x i elt ;
+    x
+
+  let to_bytes x =
+    Bytes.of_string (Js_of_ocaml.Typed_array.String.of_uint8Array x)
+end
+
+(* https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Uint16Array *)
+module Uint16TypedArray = struct
+  type elt = int
+
+  type t = Js_of_ocaml.Typed_array.uint16Array Js.t
+
+  let name = "Uint16Array"
+
+  let of_js x =
+    assert (
+      Js.to_string (Js.Unsafe.get (Js.Unsafe.get x "constructor") "name") = name
+    ) ;
+    Js.Unsafe.coerce x
+
+  let to_any_js x = Js.Unsafe.inject x
+
+  let to_string x = Js.to_string (Js.Unsafe.meth_call x "toString" [||])
+
+  let bytes_per_element =
+    Number.of_js (Js.Unsafe.get (Js.Unsafe.variable name) "BYTES_PER_ELEMENT")
+
+  let buffer x = ArrayBuffer.of_js (Js.Unsafe.get x "buffer")
+
+  let byte_length x = Number.of_js (Js.Unsafe.get x "byteLength")
+
+  let byte_offset x = Number.of_js (Js.Unsafe.get x "byteOffset")
+
+  let create ?(offset = Number.zero) ?length array_buffer =
+    (* TODO: add checks on parameters *)
+    let params =
+      if Option.is_none length then
+        [| ArrayBuffer.to_any_js array_buffer; Number.to_any_js offset |]
+      else
+        [| ArrayBuffer.to_any_js array_buffer;
+           Number.to_any_js offset;
+           Number.to_any_js (Option.get length)
+        |]
+    in
+    (Js.Unsafe.new_obj (Js.Unsafe.variable name)) params
+
+  let get_opt x (i : int) : elt option =
+    Js.Optdef.to_option (Js_of_ocaml.Typed_array.get x i)
+
+  let get_exn x i = Js_of_ocaml.Typed_array.unsafe_get x i
+
+  let set x i elt =
+    Js_of_ocaml.Typed_array.set x i elt ;
+    x
+end
+
+module ESModule = struct
+  include Js_object_base
+
+  (* let require name : t =
+   *   Js.Unsafe.eval_string (Printf.sprintf "require('%s')" name) *)
+
+  let call m fn_name args = Js.Unsafe.fun_call (Js.Unsafe.get m fn_name) args
 end
