@@ -1,7 +1,7 @@
 module Memory = struct
   let get_memory_object m =
     let open Js_of_ocaml.Js in
-    Unsafe.get (Unsafe.get m "__wasm") "memory"
+    Unsafe.get (Unsafe.get m "wasm") "memory"
 
   module Buffer = Jsoo_lib.Uint8TypedArray
 
