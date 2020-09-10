@@ -232,12 +232,11 @@ end
  *)
 module Uint16TypedArray : TYPED_ARRAY with type elt = int
 
-(** Represent a ES module. Use [ESModule.of_js m] where [m] is [Js.Unsafe.js_expr {|require ("moule_name") |}] *)
+(** Represent a ES module. Use [ESModule.of_js m] where [m] is [Js.Unsafe.js_expr {|require ("module_name") |}] *)
 module ESModule : sig
   include JS_OBJECT
 
-  (** FIXME: how to provide a function for require? *)
-
+  (* FIXME: how to provide a function for require? *)
   (* val require : string -> t *)
 
   val call : t -> string -> Js.Unsafe.any array -> Js.Unsafe.any
