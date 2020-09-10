@@ -225,6 +225,9 @@ module type TYPED_ARRAY = sig
 
   (** [set a i x] is equivalent to a[i] = x in JavaScript *)
   val set : t -> int -> elt -> t
+
+  (** [slice array a b] returns [array[a], ..., array[b]] *)
+  val slice : t -> int -> int -> t
 end
 
 (** Binding to Uint8Array.
@@ -242,13 +245,28 @@ end
  *)
 module Uint16TypedArray : TYPED_ARRAY with type elt = int
 
-(** Represent a ES module. Use [ESModule.of_js m] where [m] is [Js.Unsafe.js_expr {|require ("moule_name") |}] *)
+(** Represent a ES module. Use [ESModule.of_js m] where [m] is [Js.Unsafe.js_expr {|require ("module_name") |}] *)
 module ESModule : sig
   include JS_OBJECT
 
-  (** FIXME: how to provide a function for require? *)
-
+  (* FIXME: how to provide a function for require? *)
   (* val require : string -> t *)
 
   val call : t -> string -> Js.Unsafe.any array -> Js.Unsafe.any
+end
+
+module Promise : sig
+  type ('a, 'b) t
+
+  val of_any_js : Js.Unsafe.any -> ('a, 'b) t
+
+  type 'a fn = 'a -> unit
+
+  val make : ('a fn -> 'b fn -> unit) -> ('a, 'b) t
+
+  val then_bind : on_resolved:'a fn -> ?on_rejected:'b fn -> ('a, 'b) t -> unit
+
+  val catch_bind : 'b fn -> ('a, 'b) t -> unit
+
+  val finally_bind : unit fn -> (_, _) t -> unit
 end

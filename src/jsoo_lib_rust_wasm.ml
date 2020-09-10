@@ -8,7 +8,10 @@ module Memory = struct
   let get_buffer m =
     let open Js_of_ocaml.Js in
     Buffer.create
-      (Jsoo_lib.ArrayBuffer.of_js (Unsafe.get (get_memory_object m) "buffer"))
+      (Jsoo_lib.ArrayBuffer.of_js
+         (Unsafe.get
+            (get_memory_object (Jsoo_lib.ESModule.to_any_js m))
+            "buffer"))
 end
 
 module U64 = Jsoo_lib.BigInt

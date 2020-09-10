@@ -303,6 +303,8 @@ module type TYPED_ARRAY = sig
   val get_opt : t -> int -> elt option
 
   val set : t -> int -> elt -> t
+
+  val slice : t -> int -> int -> t
 end
 
 (* https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Uint8Array *)
@@ -357,6 +359,8 @@ module Uint8TypedArray = struct
     Js_of_ocaml.Typed_array.set x i elt ;
     x
 
+  let slice x a b = x##slice a b
+
   let to_bytes x =
     Bytes.of_string (Js_of_ocaml.Typed_array.String.of_uint8Array x)
 end
@@ -409,6 +413,8 @@ module Uint16TypedArray = struct
   let set x i elt =
     Js_of_ocaml.Typed_array.set x i elt ;
     x
+
+  let slice x a b = x##slice a b
 end
 
 module ESModule = struct
@@ -418,4 +424,35 @@ module ESModule = struct
    *   Js.Unsafe.eval_string (Printf.sprintf "require('%s')" name) *)
 
   let call m fn_name args = Js.Unsafe.fun_call (Js.Unsafe.get m fn_name) args
+end
+
+module Promise = struct
+  let promise_global_obj = Js.Unsafe.global##._Promise
+
+  let make fn = Js.Unsafe.new_obj promise_global_obj [| Js.Unsafe.inject fn |]
+
+  type ('a, 'b) t = Js.Unsafe.any
+
+  type 'a fn = 'a -> unit
+
+  let of_any_js x = x
+
+  let then_bind ~on_resolved ?on_rejected promise =
+    match on_rejected with
+    | None ->
+        Js.Unsafe.meth_call
+          promise
+          "then"
+          [| Js.Unsafe.inject on_resolved; Js.Unsafe.inject Js.undefined |]
+    | Some on_rejected ->
+        Js.Unsafe.meth_call
+          promise
+          "then"
+          [| Js.Unsafe.inject on_resolved; Js.Unsafe.inject on_rejected |]
+
+  let catch_bind fn promise =
+    Js.Unsafe.meth_call promise "catch" [| Js.Unsafe.inject fn |]
+
+  let finally_bind fn promise =
+    Js.Unsafe.meth_call promise "finally" [| Js.Unsafe.inject fn |]
 end
