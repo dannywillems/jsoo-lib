@@ -12,6 +12,23 @@ module Memory = struct
          (Unsafe.get
             (get_memory_object (Jsoo_lib.ESModule.to_any_js m))
             "buffer"))
+
+  let copy_in_buffer m src src_offset offset_in_buffer len =
+    let buffer = get_buffer m in
+    assert (
+      Jsoo_lib.Number.to_int (Buffer.byte_length buffer)
+      >= offset_in_buffer + len ) ;
+    let rec aux i =
+      if i = len then ()
+      else (
+        ignore
+        @@ Buffer.set
+             buffer
+             (offset_in_buffer + i)
+             (Bytes.get_uint8 src (src_offset + i)) ;
+        aux (i + 1) )
+    in
+    aux 0
 end
 
 module U64 = Jsoo_lib.BigInt
