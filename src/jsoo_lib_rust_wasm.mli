@@ -1,7 +1,9 @@
 module Memory : sig
   module Buffer = Jsoo_lib.Uint8TypedArray
 
-  val get_buffer : string -> Buffer.t
+  (** [get_buffer m] returns the memory buffer. [m] is the ES module
+      wasm-bindgen produced *)
+  val get_buffer : Jsoo_lib.ESModule.t -> Buffer.t
 end
 
 module U64 = Jsoo_lib.BigInt
