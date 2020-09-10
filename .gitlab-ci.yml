@@ -66,7 +66,7 @@ doc:
     - opam install . -y
   script:
     - dune build @doc
-    - cp -r _build/default/_doc/_html/ odoc/
+    - cp -r _build/default/_doc/_html odoc/
   artifacts:
     paths:
       - odoc
@@ -85,10 +85,9 @@ pages:
     - sudo apt-get install m4 -y
     - opam install odoc -y
     - opam install . -y
-    - mkdir -p public
   script:
     - dune build @doc
-    - cp -r _build/default/_doc/_html/ public/
+    - cp -r _build/default/_doc/_html public/
   artifacts:
     paths:
       - public
