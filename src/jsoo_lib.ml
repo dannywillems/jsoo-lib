@@ -318,12 +318,6 @@ module Uint8TypedArray = struct
 
   let name = "Uint8Array"
 
-  let of_js x =
-    assert (
-      Js.to_string (Js.Unsafe.get (Js.Unsafe.get x "constructor") "name") = name
-    ) ;
-    Js.Unsafe.coerce x
-
   let to_any_js x = Js.Unsafe.inject x
 
   let to_string x = Js.to_string (Js.Unsafe.meth_call x "toString" [||])
@@ -349,6 +343,20 @@ module Uint8TypedArray = struct
         |]
     in
     (Js.Unsafe.new_obj (Js.Unsafe.variable name)) params
+
+  let of_js x =
+    let constructor_name =
+      Js.to_string (Js.Unsafe.get (Js.Unsafe.get x "constructor") "name")
+    in
+    if constructor_name = name then Js.Unsafe.coerce x
+    else if constructor_name = "ArrayBuffer" then create (ArrayBuffer.of_js x)
+    else
+      raise
+        (Invalid_argument
+           (Printf.sprintf
+              "The parameter is of type %s and ArrayBuffer or %s is expected"
+              constructor_name
+              name))
 
   let get_opt x (i : int) : elt option =
     Js.Optdef.to_option (Js_of_ocaml.Typed_array.get x i)
