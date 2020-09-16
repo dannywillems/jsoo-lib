@@ -1,5 +1,7 @@
 module Memory = struct
-  let get_memory_object m =
+  include Jsoo_lib.Js_object_base
+
+  let get_memory m : t =
     let open Js_of_ocaml.Js in
     Unsafe.get (Unsafe.get m "wasm") "memory"
 
@@ -9,12 +11,9 @@ module Memory = struct
     let open Js_of_ocaml.Js in
     Buffer.create
       (Jsoo_lib.ArrayBuffer.of_js
-         (Unsafe.get
-            (get_memory_object (Jsoo_lib.ESModule.to_any_js m))
-            "buffer"))
+         (Unsafe.get (get_memory (Jsoo_lib.ESModule.to_any_js m)) "buffer"))
 
-  let copy_in_buffer m src src_offset offset_in_buffer len =
-    let buffer = get_buffer m in
+  let copy_in_buffer buffer src src_offset offset_in_buffer len =
     assert (
       Jsoo_lib.Number.to_int (Buffer.byte_length buffer)
       >= offset_in_buffer + len ) ;

@@ -11,6 +11,8 @@ module type JS_OBJECT = sig
   val to_string : t -> string
 end
 
+module Js_object_base : JS_OBJECT
+
 (** Typed version of [getElementById], coercing to an input element *)
 val get_input_by_id : string -> Dom_html.inputElement Js.t
 
