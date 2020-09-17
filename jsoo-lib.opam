@@ -1,5 +1,5 @@
 opam-version: "2.0"
-version: "0.0.3"
+version: "0.0.4"
 maintainer: "Danny Willems <be.danny.willems@gmail.com>"
 authors: ["Danny Willems <be.danny.willems@gmail.com>"]
 homepage: "https://github.com/dannywillems/jsoo-lib"
@@ -21,6 +21,3 @@ depends: [
 ]
 synopsis: "Binding to different JavaScript libraries/routines using js_of_ocaml"
 description: "Binding to different JavaScript libraries/routines using js_of_ocaml"
-pin-depends: [
-  ["integers_stubs_js.1.0" "git+https://github.com/o1-labs/integers_stubs_js.git#1.0"]
-]

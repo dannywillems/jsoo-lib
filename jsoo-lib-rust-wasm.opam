@@ -1,5 +1,5 @@
 opam-version: "2.0"
-version: "0.0.3"
+version: "0.0.4"
 maintainer: "Danny Willems <be.danny.willems@gmail.com>"
 authors: ["Danny Willems <be.danny.willems@gmail.com>"]
 homepage: "https://github.com/dannywillems/jsoo-lib"
@@ -12,7 +12,7 @@ build: [
 depends: [
   "ocaml" {>= "4.04.2"}
   "dune" {>= "2.0.0"}
-  "jsoo-lib"
+  "jsoo-lib" {= "0.0.4"}
   "js_of_ocaml" {= "3.7.0"}
   "js_of_ocaml-compiler" {= "3.7.0"}
   "js_of_ocaml-ppx" {= "3.7.0"}
