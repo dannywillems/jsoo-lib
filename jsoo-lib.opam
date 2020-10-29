@@ -12,9 +12,9 @@ build: [
 depends: [
   "ocaml" {>= "4.04.2"}
   "dune" {>= "2.0.0"}
-  "js_of_ocaml" {= "3.7.0"}
-  "js_of_ocaml-compiler" {= "3.7.0"}
-  "js_of_ocaml-ppx" {= "3.7.0"}
+  "js_of_ocaml" {>= "3.7.1" & < "4"}
+  "js_of_ocaml-compiler" {>= "3.7.1" & < "4"}
+  "js_of_ocaml-ppx" {>= "3.7.1" & < "4"}
   "zarith_stubs_js"
   "integers" {= "0.4.0"}
   "integers_stubs_js" {= "1.0"}
