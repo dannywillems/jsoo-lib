@@ -12,10 +12,10 @@ build: [
 depends: [
   "ocaml" {>= "4.04.2"}
   "dune" {>= "2.0.0"}
-  "jsoo-lib" {= "0.0.4"}
-  "js_of_ocaml" {= "3.7.0"}
-  "js_of_ocaml-compiler" {= "3.7.0"}
-  "js_of_ocaml-ppx" {= "3.7.0"}
+  "jsoo-lib"
+  "js_of_ocaml" {>= "3.7.1" & < "4"}
+  "js_of_ocaml-compiler" {>= "3.7.1" & < "4"}
+  "js_of_ocaml-ppx" {>= "3.7.1" & < "4"}
 ]
 synopsis: "Binding to different JavaScript libraries/routines using js_of_ocaml"
 description: "Binding to different JavaScript libraries/routines using js_of_ocaml"
