@@ -16,7 +16,7 @@ let () =
 
 You need to pin the repository:
 ```
-opam pin add jsoo_lib https://github.com/dannywillems/jsoo-lib.git
+opam pin add jsoo-lib https://github.com/dannywillems/jsoo-lib.git
 ```
 
 ## Missing stubs
