@@ -22,26 +22,43 @@ end
 
 let doc = Dom_html.document
 
+module Input = struct
+  type t = Dom_html.inputElement Js.t
+
+  let set_content i s = i##.value := Js.string s
+
+  let to_js b = b
+end
+
 (* -------------------------------------------------------------------------- *)
-let get_input_by_id str =
-  Js.coerce (Dom_html.getElementById str) Dom_html.CoerceTo.input (fun _ ->
-      assert false)
+let get_input_by_id_exn str =
+  Option.get @@ Js.Opt.to_option
+  @@ Dom_html.CoerceTo.input (Dom_html.getElementById str)
+
+let get_input_by_id_opt str =
+  Js.Opt.to_option @@ Dom_html.CoerceTo.input (Dom_html.getElementById str)
 
 let get_p_by_id str =
   Js.coerce (Dom_html.getElementById str) Dom_html.CoerceTo.p (fun _ ->
       assert false)
 
-let get_div_by_id str =
-  Js.coerce (Dom_html.getElementById str) Dom_html.CoerceTo.div (fun _ ->
-      assert false)
+let get_div_by_id_exn str =
+  Option.get @@ Js.Opt.to_option
+  @@ Dom_html.CoerceTo.div (Dom_html.getElementById str)
+
+let get_div_by_id_opt str =
+  Js.Opt.to_option @@ Dom_html.CoerceTo.div (Dom_html.getElementById str)
 
 let get_blockquote_by_id str =
   Js.coerce (Dom_html.getElementById str) Dom_html.CoerceTo.blockquote (fun _ ->
       assert false)
 
-let get_button_by_id str =
-  Js.coerce (Dom_html.getElementById str) Dom_html.CoerceTo.button (fun _ ->
-      assert false)
+let get_button_by_id_exn str =
+  Option.get @@ Js.Opt.to_option
+  @@ Dom_html.CoerceTo.button (Dom_html.getElementById str)
+
+let get_button_by_id_opt str =
+  Js.Opt.to_option @@ Dom_html.CoerceTo.button (Dom_html.getElementById str)
 
 let get_link_by_id str =
   Js.coerce (Dom_html.getElementById str) Dom_html.CoerceTo.link (fun _ ->

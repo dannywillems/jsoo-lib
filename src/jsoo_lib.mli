@@ -13,20 +13,37 @@ end
 
 module Js_object_base : JS_OBJECT
 
+module Input : sig
+  type t = Dom_html.inputElement Js.t
+
+  val set_content : t -> string -> unit
+
+  val to_js : t -> Dom_html.inputElement Js.t
+end
+
 (** Typed version of [getElementById], coercing to an input element *)
-val get_input_by_id : string -> Dom_html.inputElement Js.t
+val get_input_by_id_exn : string -> Input.t
+
+(** Typed version of [getElementById], coercing to an input element *)
+val get_input_by_id_opt : string -> Input.t option
 
 (** Typed version of [getElementById], coercing to a paragraph element *)
 val get_p_by_id : string -> Dom_html.paramElement Js.t
 
 (** Typed version of [getElementById], coercing to a div element *)
-val get_div_by_id : string -> Dom_html.divElement Js.t
+val get_div_by_id_opt : string -> Dom_html.divElement Js.t option
+
+(** Typed version of [getElementById], coercing to a div element *)
+val get_div_by_id_exn : string -> Dom_html.divElement Js.t
 
 (** Typed version of [getElementById], coercing to a blockquote element *)
 val get_blockquote_by_id : string -> Dom_html.quoteElement Js.t
 
 (** Typed version of [getElementById], coercing to a button element *)
-val get_button_by_id : string -> Dom_html.buttonElement Js.t
+val get_button_by_id_exn : string -> Dom_html.buttonElement Js.t
+
+(** Typed version of [getElementById], coercing to a button element *)
+val get_button_by_id_opt : string -> Dom_html.buttonElement Js.t option
 
 (** Typed version of [getElementById], coercing to a link element *)
 val get_link_by_id : string -> Dom_html.linkElement Js.t
